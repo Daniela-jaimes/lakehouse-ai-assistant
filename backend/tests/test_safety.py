@@ -105,7 +105,6 @@ def test_accepts_union_over_gold_tables():
 
 # --- Known gaps (documented, still contained by the read-only role) --------
 
-@pytest.mark.xfail(reason='a trailing -- comment swallows the closing ") AS q LIMIT n"')
 def test_line_comment_does_not_break_the_wrapper():
     result = validate_and_limit('SELECT 1 -- note', MAX_ROWS)
     assert '-- note' not in result
@@ -115,3 +114,8 @@ def test_line_comment_does_not_break_the_wrapper():
 def test_rejects_row_locking():
     with pytest.raises(ValueError):
         validate_and_limit('SELECT * FROM dim_store FOR UPDATE', MAX_ROWS)
+
+
+def test_valid_select_gets_a_limit():
+    result = validate_and_limit('SELECT count(*) FROM fact_sales', MAX_ROWS)
+    assert result.lower() == 'select * from (select count(*) from fact_sales) as q limit 1000'
