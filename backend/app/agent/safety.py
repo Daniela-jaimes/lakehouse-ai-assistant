@@ -1,3 +1,4 @@
+
 import sqlglot
 from sqlglot import exp
 
@@ -48,17 +49,16 @@ def validate_and_limit(sql: str, max_rows: int) -> str:
     }
 
     for table in tree.find_all(exp.Table):
-        if table.name not in ALLOWED_TABLES | ctes:
+        if table.name.lower() not in ALLOWED_TABLES | ctes:
             raise ValueError(f'table not allowed: {table.name}')
 
     for func in tree.find_all(exp.Anonymous):
         if func.name.lower().startswith(('pg_', 'dblink', 'lo_')):
             raise ValueError(f'function not allowed: {func.name}')
 
-    if not isinstance(max_rows, int) or not 1 <= max_rows <= 10000:
+    if not isinstance(max_rows, int) or isinstance(max_rows, bool) or not 1 <= max_rows <= 10000:
         raise ValueError('max_rows must be between 1 and 10000')
 
-    return (
-        f'SELECT * FROM ({sql.strip().rstrip(";")}) AS q '
-        f'LIMIT {max_rows}'
-    )
+    clean_sql = tree.sql(dialect='postgres', comments=False)
+
+    return f'SELECT * FROM ({clean_sql}) AS q LIMIT {max_rows}'
