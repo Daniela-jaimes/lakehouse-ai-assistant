@@ -12,6 +12,9 @@ TABLES = ['dim_date', 'dim_customer', 'dim_product',
 
 def load(conn, table):
     files = sorted(glob.glob(f'data/export/{table}/*'))
+    if not files:
+        raise SystemExit(f'No files found in data/export/{table}. Run from the repo root.')
+    total = 0
     with conn.cursor() as cur:
         cur.execute(f'TRUNCATE gold.{table}')
         with cur.copy(f'COPY gold.{table} FROM STDIN WITH (FORMAT csv)') as copy:
@@ -22,8 +25,9 @@ def load(conn, table):
                     batch.to_pandas(types_mapper=pd.ArrowDtype).to_csv(
                         buffer, index=False, header=False)
                     copy.write(buffer.getvalue())
+                    total += batch.num_rows
     conn.commit()
-    print(f'[LOAD] {table} done')
+    print(f'[LOAD] {table} done: {total} rows', flush=True)
 
 
 if __name__ == '__main__':
