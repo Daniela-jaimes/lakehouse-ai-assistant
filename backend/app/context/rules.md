@@ -1,0 +1,10 @@
+- Sales means SUM(net_amount) excluding order_status IN ('cancelled', 'returned'). Orders = COUNT(DISTINCT order_id).
+- Valid order_status values: cancelled, completed, pending, returned, shipped. Only cancelled and returned are excluded from sales; pending and shipped count.
+- Average ticket = net sales / distinct orders. Currency is COP; format numbers with thousand separators.
+- The reference date for the data is 2026-11-11. This month / quarter / year are relative to that date, never to CURRENT_DATE. "This month" is November 2026 (only 11 days of data); "previous month" is October 2026.
+- Join fact_sales to dimensions through the *_key columns. Key -1 is the Unknown member: exclude it from rankings unless asked.
+- dim_date.month_name is in English: translate it to Spanish in the answer. Quarter is 1 to 4.
+- agg_sales_dept_age_quarter is a ready-made mart (year, quarter, age_group, department) that already excludes cancelled and returned orders: prefer it for those dimensions.
+- For returns or return rate, do NOT exclude returned orders: use order_status = 'returned' against the total.
+- The data is a 20 percent sample of the orders: totals are about one fifth of the real Lakehouse.
+- Glossary: ventas = net_amount; descuento = discount_amount; ticket promedio = net sales / distinct orders; devoluciones = order_status 'returned'.
