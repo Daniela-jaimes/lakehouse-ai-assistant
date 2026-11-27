@@ -1,0 +1,11 @@
+CREATE ROLE agent_ro LOGIN PASSWORD '<password>';
+GRANT CONNECT ON DATABASE neondb TO agent_ro;
+GRANT USAGE ON SCHEMA gold, rag TO agent_ro;
+GRANT SELECT ON ALL TABLES IN SCHEMA gold TO agent_ro;
+GRANT SELECT ON ALL TABLES IN SCHEMA rag TO agent_ro;
+ALTER DEFAULT PRIVILEGES IN SCHEMA gold GRANT SELECT ON TABLES TO agent_ro;
+ALTER DEFAULT PRIVILEGES IN SCHEMA rag GRANT SELECT ON TABLES TO agent_ro;
+ALTER ROLE agent_ro SET default_transaction_read_only = on;
+ALTER ROLE agent_ro SET statement_timeout = '15s';
+ALTER ROLE agent_ro SET search_path = gold, public;
+ALTER ROLE agent_ro CONNECTION LIMIT 8;
