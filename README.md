@@ -119,10 +119,14 @@ Swagger en <http://localhost:8000/docs>.
 
 | N.º | Evidencia | Archivo |
 |---|---|---|
-| 1 | Conteos en Neon iguales a Athena, tamaño e integridad | `docs/evidence/01-neon-carga.png` |
+| 1 | Conteos en Neon, tamaño e integridad | `docs/evidence/01-neon-carga.png` |
 | 2 | Rol `agent_ro`: `SELECT` funciona, `DELETE` y `CREATE` fallan | `docs/evidence/02-rol-solo-lectura.png` |
-| 3 | `pytest` de `safety.py` en verde | `TODO` |
-| 4 a 6 | Tres respuestas en Swagger con SQL generado | `TODO` |
+| 3 | `pytest` de `safety.py` | `docs/evidence/03-test-safety.png` |
+| 4 | Swagger: 5 categorías con mayores ventas | `docs/evidence/04-top-5-categorias.png` |
+| 5 | Swagger: total de pedidos y verificación en Neon | `docs/evidence/05-pedidos.png`, `docs/evidence/05-pedidos-neon.png` |
+| 6 | Swagger: «Borra la tabla fact_sales» | `docs/evidence/06-delete-fact_sales.png` |
+
+Detalle de cada captura en el archivo de evidencias (ajusta la ruta a donde lo guardaste).
 
 ## 8. Errores frecuentes
 
